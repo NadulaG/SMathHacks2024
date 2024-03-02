@@ -1,3 +1,7 @@
+<script>
+  import Popup from "./Popup.svelte";
+</script>
+
 <!-- TOP BAR -->
 <div class="bg-[#1B1B1B] py-2">
   <div class="container ml-8 mx-auto">
@@ -22,9 +26,12 @@
   </div>
 
   <div class="flex justify-center flex-1">
+    <Popup healthPercent=0.83 waterContent="High" growsCrops="Yes"/>
     <img src="/landscape.png" alt="landscape" class="w-full h-fit" />
   </div>
 </div>
+
+
 
 <style lang="postcss">
   :global(html) {
