@@ -1,17 +1,9 @@
 <script>
   import Popup from "$lib/components/Popup.svelte";
+  import NavBar from "$lib/components/NavBar.svelte";
 </script>
 
-<div class="bg-[#1B1B1B] py-2">
-  <div class="container ml-8 mx-auto">
-    <div class="flex justify-between">
-      <div class="text-white text-2xl font-bold">Flight History</div>
-      <div class="flex items-center space-x-4">
-        <span class="text-gray-300 font-semibold">3/2/2024</span>
-      </div>
-    </div>
-  </div>
-</div>
+<NavBar route="/" />
 
 <div class="flex h-max overflow-hidden">
   <div class="bg-[#1B1B1B] w-80">
