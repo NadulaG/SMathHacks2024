@@ -1,4 +1,4 @@
-# **USING HOUSEHOLD DRONES TO DETERMINE AGRICULTURAL HEALTH**
+# **Using Household Drones to Determine Agricultural Health**
 
 ## Introduction
 
