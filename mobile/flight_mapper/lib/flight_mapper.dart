@@ -15,38 +15,8 @@ class _FlightMapperState extends State<FlightMapper> {
       // image: const Image(image: AssetImage("assets/landscape.png")),
       duration: const Duration(minutes: 24),
       batteryLoss: 58.0);
-  List<PathNode> pathNodes = [];
-  List<Widget> pathWidgets = [];
 
-  _handleImageTapUp(BuildContext context, TapDownDetails details) {
-    setState(() {
-      RenderBox box = context.findRenderObject() as RenderBox;
-      PathNode newNode =
-          PathNode(x: details.localPosition.dx, y: details.localPosition.dy);
-      if (pathNodes.isNotEmpty) {
-        pathNodes.last.child = newNode;
-      }
-      pathNodes.add(newNode);
-
-      pathWidgets.add(Positioned(
-          top: details.localPosition.dy,
-          left: details.localPosition.dx,
-          child: Container(
-            width: 20,
-            height: 20,
-            child: Center(
-              child: Text(
-                "${pathNodes.length}",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
-                borderRadius: BorderRadius.all(Radius.circular(50.0))),
-          )));
-    });
-  }
+  _handleImageTapUp(BuildContext context, TapDownDetails details) {}
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +109,6 @@ class _FlightMapperState extends State<FlightMapper> {
                         _handleImageTapUp(context, details);
                       },
                     ),
-                    for (var widget in pathWidgets) widget,
                     Align(
                       alignment: Alignment.bottomRight,
                       child: Padding(
