@@ -15,11 +15,42 @@ class _FlightMapperState extends State<FlightMapper> {
       // image: const Image(image: AssetImage("assets/landscape.png")),
       duration: const Duration(minutes: 24),
       batteryLoss: 58.0);
+  List<PathNode> pathNodes = [];
+  List<Widget> pathWidgets = [];
+
+  _handleImageTapUp(BuildContext context, TapDownDetails details) {
+    setState(() {
+      RenderBox box = context.findRenderObject() as RenderBox;
+      PathNode newNode =
+          PathNode(x: details.localPosition.dx, y: details.localPosition.dy);
+      if (pathNodes.isNotEmpty) {
+        pathNodes.last.child = newNode;
+      }
+      pathNodes.add(newNode);
+
+      pathWidgets.add(Positioned(
+          top: details.localPosition.dy,
+          left: details.localPosition.dx,
+          child: Container(
+            width: 20,
+            height: 20,
+            child: Center(
+              child: Text(
+                "${pathNodes.length}",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.background,
+                borderRadius: BorderRadius.all(Radius.circular(50.0))),
+          )));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final colorTheme = Theme.of(context).colorScheme;
-
     return Scaffold(
         body: Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -30,7 +61,7 @@ class _FlightMapperState extends State<FlightMapper> {
             color: colorTheme.background,
             width: double.infinity,
             child: Padding(
-              padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
+              padding: const EdgeInsets.only(left: 20, top: 30, right: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -102,7 +133,13 @@ class _FlightMapperState extends State<FlightMapper> {
               child: () {
                 if (data.image != null) {
                   return Stack(children: <Widget>[
-                    data.image as Widget,
+                    GestureDetector(
+                      child: Center(child: data.image as Widget),
+                      onTapDown: (details) {
+                        _handleImageTapUp(context, details);
+                      },
+                    ),
+                    for (var widget in pathWidgets) widget,
                     Align(
                       alignment: Alignment.bottomRight,
                       child: Padding(
@@ -113,11 +150,11 @@ class _FlightMapperState extends State<FlightMapper> {
                               data.deleteImage();
                             });
                           },
+                          backgroundColor: colorTheme.background,
                           child: Icon(
                             Icons.delete,
                             color: colorTheme.onPrimary,
                           ),
-                          backgroundColor: colorTheme.background,
                         ),
                       ),
                     )
@@ -149,7 +186,7 @@ class _FlightMapperState extends State<FlightMapper> {
                               if (result != null) {
                                 File file = File(result.files.single.path!);
                                 setState(() {
-                                  data.updateImage(Image.file(file));
+                                  data.image = Image.file(file);
                                 });
                               }
                             },
@@ -168,6 +205,14 @@ class _FlightMapperState extends State<FlightMapper> {
       ],
     ));
   }
+}
+
+class PathNode {
+  double x;
+  double y;
+  PathNode? child;
+
+  PathNode({required this.x, required this.y});
 }
 
 class FlightData {
