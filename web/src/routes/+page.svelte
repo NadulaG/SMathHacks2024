@@ -1,5 +1,5 @@
 <script>
-  import Popup from "./Popup.svelte";
+  import Popup from "$lib/components/Popup.svelte";
 </script>
 
 <div class="bg-[#1B1B1B] py-2">
