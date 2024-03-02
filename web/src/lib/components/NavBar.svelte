@@ -1,4 +1,7 @@
 <script>
+  /**
+   * @type {string}
+   */
   export let route;
 </script>
 
