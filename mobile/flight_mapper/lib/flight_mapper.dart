@@ -101,7 +101,27 @@ class _FlightMapperState extends State<FlightMapper> {
               height: double.infinity,
               child: () {
                 if (data.image != null) {
-                  return data.image;
+                  return Stack(children: <Widget>[
+                    data.image as Widget,
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FloatingActionButton(
+                          onPressed: () {
+                            setState(() {
+                              data.deleteImage();
+                            });
+                          },
+                          child: Icon(
+                            Icons.delete,
+                            color: colorTheme.onPrimary,
+                          ),
+                          backgroundColor: colorTheme.background,
+                        ),
+                      ),
+                    )
+                  ]);
                 } else {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -129,7 +149,7 @@ class _FlightMapperState extends State<FlightMapper> {
                               if (result != null) {
                                 File file = File(result.files.single.path!);
                                 setState(() {
-                                  data.image = Image.file(file);
+                                  data.updateImage(Image.file(file));
                                 });
                               }
                             },
@@ -158,6 +178,10 @@ class FlightData {
 
   void updateImage(Image image) {
     this.image = image;
+  }
+
+  void deleteImage() {
+    image = null;
   }
 
   FlightData(
