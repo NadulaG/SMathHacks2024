@@ -16,9 +16,10 @@ class _FlightMapperState extends State<FlightMapper> {
       duration: const Duration(minutes: 24),
       batteryLoss: 58.0);
 
-  late GoogleMapController _mapController;
   late Future _centerFuture;
-  LatLng _center = const LatLng(45.521563, -122.677433);
+  LatLng _center = const LatLng(45.521563, -122.677433); // Default position
+  final Region region = Region();
+  bool droneLaunched = false;
 
   @override
   void initState() {
@@ -48,21 +49,16 @@ class _FlightMapperState extends State<FlightMapper> {
     setState(() {
       _center = LatLng(curPos.latitude, curPos.longitude);
     });
+    region.updateControlPoint1(_center);
+    region.updateControlPoint2(
+        LatLng(_center.latitude - 0.01, _center.longitude + 0.01));
     return curPos;
   }
-
-  void _onMapCreated(
-      GoogleMapController controller, BuildContext buildContext) async {}
 
   @override
   Widget build(BuildContext context) {
     final colorTheme = Theme.of(context).colorScheme;
     _centerFuture = _getCurrentLocation();
-    double screenWidth = MediaQuery.of(context).size.width *
-        MediaQuery.of(context).devicePixelRatio;
-    double screenHeight = MediaQuery.of(context).size.height *
-        MediaQuery.of(context).devicePixelRatio;
-    print("Screen dimensions: $screenWidth, $screenHeight");
     return Scaffold(
         body: Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -117,18 +113,36 @@ class _FlightMapperState extends State<FlightMapper> {
                       width: double.infinity,
                       height: 70,
                       child: TextButton(
-                        style: TextButton.styleFrom(
-                            backgroundColor: colorTheme.primary,
-                            foregroundColor: colorTheme.onPrimary,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)))),
-                        onPressed: () {},
-                        child: const Text(
-                          "Launch Drone",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
+                          style: TextButton.styleFrom(
+                              backgroundColor: () {
+                                if (!droneLaunched) {
+                                  return colorTheme.primary;
+                                } else {
+                                  return Colors.red;
+                                }
+                              }(),
+                              foregroundColor: colorTheme.onPrimary,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)))),
+                          onPressed: () {
+                            setState(() {
+                              droneLaunched = true;
+                            });
+                          },
+                          child: () {
+                            if (!droneLaunched) {
+                              return const Text(
+                                "Launch Drone",
+                                style: TextStyle(fontSize: 20),
+                              );
+                            } else {
+                              return const Text(
+                                "Drone Launched",
+                                style: TextStyle(fontSize: 20),
+                              );
+                            }
+                          }()),
                     ),
                   ),
                 ],
@@ -136,112 +150,151 @@ class _FlightMapperState extends State<FlightMapper> {
             ),
           ),
         ),
-        FutureBuilder(
-            future: _centerFuture,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Flexible(
-                  flex: 3,
-                  child: Container(
-                      color: colorTheme.onBackground,
-                      width: double.infinity,
-                      height: double.infinity,
-                      child: () {
-                        return Center(
-                          child: GoogleMap(
-                            onMapCreated:
-                                (GoogleMapController controller) async {
-                              _mapController = controller;
-                              double screenWidth =
-                                  MediaQuery.of(context).size.width *
-                                      MediaQuery.of(context).devicePixelRatio;
-                              double screenHeight =
-                                  MediaQuery.of(context).size.height *
-                                      MediaQuery.of(context).devicePixelRatio;
-
-                              print(
-                                  "Screen dimensions: $screenWidth, $screenHeight");
-
-                              ScreenCoordinate bottomRight = ScreenCoordinate(
-                                  x: screenWidth.round() - 1,
-                                  y: screenHeight.round() - 1);
-
-                              LatLng bottomRightLatLng =
-                                  await controller.getLatLng(bottomRight);
-
-                              LatLng topLeftLatLng = await controller
-                                  .getLatLng(ScreenCoordinate(x: 0, y: 0));
-                              print(
-                                  "Bottom right latitude: ${bottomRightLatLng.latitude}, ${bottomRightLatLng.longitude}");
-                              print(
-                                  "Top left latitude: ${topLeftLatLng.latitude}, ${topLeftLatLng.longitude}");
-                            },
-                            initialCameraPosition: CameraPosition(
-                              target: _center,
-                              zoom: 15.0,
-                            ),
-                            markers: {
-                              Marker(
-                                  markerId: MarkerId("marker1"),
-                                  position: LatLng(
-                                      35.756746599609976, -81.69471345841885),
-                                  draggable: true,
-                                  infoWindow: InfoWindow(
-                                      title: "Coordinates",
-                                      snippet:
-                                          "${_center.latitude}, ${_center.longitude}")),
-                              Marker(
-                                  markerId: MarkerId("marker1"),
-                                  position: LatLng(
-                                      35.74325282002251, -81.65547676384449),
-                                  draggable: true,
-                                  infoWindow: InfoWindow(
-                                      title: "Coordinates",
-                                      snippet:
-                                          "${_center.latitude}, ${_center.longitude}")),
-                            },
-                          ),
-                        );
-                      }()),
-                );
-              } else {
-                return const Flexible(
-                    flex: 3,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 15.0),
-                            child: Text(
-                              "Loading Google Maps data...",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 25),
-                            ),
-                          ),
-                          CircularProgressIndicator(),
-                        ],
-                      ),
-                    ));
-              }
-            })
+        PathPreview(
+            centerFuture: _centerFuture, cameraFocus: _center, region: region),
       ],
     ));
   }
 }
 
-class PathNode {
-  double x;
-  double y;
-  PathNode? child;
+class PathPreview extends StatefulWidget {
+  Future centerFuture;
+  LatLng cameraFocus;
+  Region region;
 
-  PathNode({required this.x, required this.y});
+  PathPreview(
+      {super.key,
+      required this.centerFuture,
+      required this.cameraFocus,
+      required this.region});
+
+  @override
+  createState() => _PathPreviewState();
+}
+
+class _PathPreviewState extends State<PathPreview> {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: widget.centerFuture,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Flexible(
+              flex: 3,
+              child: Container(
+                  color: Theme.of(context).colorScheme.onBackground,
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: () {
+                    return Center(
+                      child: GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                          target: widget.cameraFocus,
+                          zoom: 15.0,
+                        ),
+                        polygons: widget.region.polygons,
+                        markers: {
+                          Marker(
+                              markerId: const MarkerId("1"),
+                              position: widget.region.controlPoint1!,
+                              draggable: true,
+                              onDrag: (position) {
+                                setState(() {
+                                  widget.region.updateControlPoint1(position);
+                                });
+                              },
+                              onDragEnd: (position) {
+                                setState(() {
+                                  widget.region.updateControlPoint1(position);
+                                });
+                              },
+                              infoWindow: InfoWindow(
+                                  title: "Coordinates",
+                                  snippet:
+                                      "ID: 1, ${widget.cameraFocus.latitude}, ${widget.cameraFocus.longitude}")),
+                          Marker(
+                              markerId: const MarkerId("2"),
+                              position: widget.region.controlPoint2!,
+                              draggable: true,
+                              onDrag: (position) {
+                                setState(() {
+                                  widget.region.updateControlPoint2(position);
+                                });
+                              },
+                              onDragEnd: (position) {
+                                setState(() {
+                                  widget.region.updateControlPoint2(position);
+                                });
+                              },
+                              infoWindow: InfoWindow(
+                                  title: "Coordinates",
+                                  snippet:
+                                      "ID: 2, ${widget.cameraFocus.latitude}, ${widget.cameraFocus.longitude}")),
+                        },
+                      ),
+                    );
+                  }()),
+            );
+          } else {
+            return const Flexible(
+                flex: 3,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 15.0),
+                        child: Text(
+                          "Loading Google Maps data...",
+                          style: TextStyle(color: Colors.white, fontSize: 25),
+                        ),
+                      ),
+                      CircularProgressIndicator(),
+                    ],
+                  ),
+                ));
+          }
+        });
+  }
+}
+
+class Region {
+  LatLng? controlPoint1;
+  LatLng? controlPoint2;
+  Set<Polygon> polygons = <Polygon>{};
+
+  void updateControlPoint1(LatLng polygon) {
+    controlPoint1 = polygon;
+    updateRegion();
+  }
+
+  void updateControlPoint2(LatLng polygon) {
+    controlPoint2 = polygon;
+    updateRegion();
+  }
+
+  void updateRegion() {
+    if (controlPoint1 != null && controlPoint2 != null) {
+      polygons = <Polygon>{
+        Polygon(
+            polygonId: const PolygonId('1'),
+            points: [
+              controlPoint1!,
+              LatLng(controlPoint1!.latitude, controlPoint2!.longitude),
+              controlPoint2!,
+              LatLng(controlPoint2!.latitude, controlPoint1!.longitude),
+            ],
+            fillColor: Colors.red.withOpacity(0.6),
+            strokeColor: Colors.red,
+            strokeWidth: 5)
+      };
+    }
+  }
 }
 
 class FlightData {
   Image image;
   Duration duration;
-  WeatherData? weather;
   double batteryLoss;
 
   void updateImage(Image image) {
@@ -249,36 +302,5 @@ class FlightData {
   }
 
   FlightData(
-      {required this.image,
-      this.weather,
-      required this.duration,
-      required this.batteryLoss});
-}
-
-class WeatherData {
-  double fahrenheit;
-  WeatherType type;
-  double windSpeed;
-  WindDirection windDirection;
-
-  WeatherData(
-      {required this.fahrenheit,
-      required this.type,
-      required this.windSpeed,
-      required this.windDirection});
-}
-
-// Add more of these
-enum WeatherType { sunny, cloudy, rainy }
-
-enum WindDirection {
-  topLeft,
-  topCenter,
-  topRight,
-  centerLeft,
-  center,
-  centerRight,
-  bottomLeft,
-  bottomCenter,
-  bottomRight
+      {required this.image, required this.duration, required this.batteryLoss});
 }
