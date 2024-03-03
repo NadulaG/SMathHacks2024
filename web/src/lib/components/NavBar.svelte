@@ -8,6 +8,16 @@
    * @type {string}
    */
   export let image;
+
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
+
+  function handleClick() {
+    dispatch("listSelect", image);
+    console.log("Dispatching ListSelect");
+  }
+
 </script>
 
 <div class="bg-[#1B1B1B] py-2">
@@ -31,7 +41,7 @@
       <div class="flex items-center space-x-4">
         <!-- <span class="text-gray-300 font-semibold">3/2/2024</span> -->
 
-        <select id="image" name="image" class="rounded-md bg-gray-300 p-1 istok" bind:value={image}>
+        <select id="image" name="image" class="rounded-md bg-gray-300 p-1 istok" bind:value={image} on:change={() => handleClick()}>
           <option value="3/1/2024">3/1/2024</option>
           <option value="3/2/2024">3/2/2024</option>
           <option value="3/3/2024" selected>3/3/2024</option>

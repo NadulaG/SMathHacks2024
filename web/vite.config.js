@@ -6,7 +6,7 @@ export default defineConfig({
 	server: {
 		fs: {
 			// Set the root directory to the directory containing the file you want to serve
-			allow: ['C:/Users/jaket/Desktop/smath/SMathHacks2024/web/static']
+			allow: ['/']
 		},
 	},
 });

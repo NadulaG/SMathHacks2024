@@ -1,0 +1,108 @@
+[
+    [
+        {
+            "positionX": 0.18,
+            "positionY": 0.78,
+            "width": 180,
+            "height": 180,
+            "health": 0.83,
+            "growsCrops": "Yes",
+            "waterContent": "High",
+            "nutrients": {
+                "potassium": 86,
+                "nitrogen": 54,
+                "phosphorus": 42,
+                "calcium": 500,
+                "magnesium": 48,
+                "sulfur": 10
+            }
+        },
+        {
+            "positionX": 0.8,
+            "positionY": 0.65,
+            "width": 180,
+            "height": 120,
+            "health": 0.43,
+            "growsCrops": "No",
+            "waterContent": "Low",
+            "nutrients": {
+                "potassium": 86,
+                "nitrogen": 54,
+                "phosphorus": 42,
+                "calcium": 500,
+                "magnesium": 48,
+                "sulfur": 10
+            }
+        },
+        {
+            "positionX": 0.88,
+            "positionY": 0.16,
+            "width": 200,
+            "height": 100,
+            "health": 0.76,
+            "growsCrops": "Yes",
+            "waterContent": "High",
+            "nutrients": {
+                "potassium": 86,
+                "nitrogen": 54,
+                "phosphorus": 42,
+                "calcium": 500,
+                "magnesium": 48,
+                "sulfur": 10
+            }
+        }
+    ],
+    [
+        {
+            "positionX": 0.81,
+            "positionY": 0.74,
+            "width": 260,
+            "height": 260,
+            "health": 0.92,
+            "growsCrops": "Yes",
+            "waterContent": "High",
+            "nutrients": {
+                "potassium": 86,
+                "nitrogen": 54,
+                "phosphorus": 42,
+                "calcium": 500,
+                "magnesium": 48,
+                "sulfur": 10
+            }
+        },
+        {
+            "positionX": 0.4,
+            "positionY": 0.44,
+            "width": 120,
+            "height": 120,
+            "health": 0.36,
+            "growsCrops": "No",
+            "waterContent": "Low",
+            "nutrients": {
+                "potassium": 86,
+                "nitrogen": 54,
+                "phosphorus": 42,
+                "calcium": 500,
+                "magnesium": 48,
+                "sulfur": 10
+            }
+        },
+        {
+            "positionX": 0.93,
+            "positionY": 0.2,
+            "width": 100,
+            "height": 100,
+            "health": 0.32,
+            "growsCrops": "No",
+            "waterContent": "Low",
+            "nutrients": {
+                "potassium": 86,
+                "nitrogen": 54,
+                "phosphorus": 42,
+                "calcium": 500,
+                "magnesium": 48,
+                "sulfur": 10
+            }
+        }
+    ]
+]

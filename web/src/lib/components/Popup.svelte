@@ -11,6 +11,12 @@
   export let positionX;
   export let positionY;
 
+  let offset = 0;
+
+  if(positionX > 0.7) {
+    offset = 180;
+  }
+
   let waterContentColor;
 
   let alphabet = [
@@ -64,8 +70,8 @@
   }
 </script>
 
-<img src="../../static/summary/triangle.png" class="triangle" style="top: calc({positionY*100}% - 15px); left: calc({positionX*100}% + 50px)">
-<div class="popup" style="top: {positionY*100}%; left: {positionX*100}%">
+<div class="popup" style="top: {positionY*100}%; left: calc({positionX*100}% - {offset}px)">
+  <img src="../../static/summary/triangle.png" class="triangle" style="top: -12px; left: calc(12px + {offset}px);">
   <div class="text">
     <h2>
       Grass <span style="font-weight: 400; font-size: 0.8dvw; color: #848484;"
@@ -105,6 +111,10 @@
     align-items: center;
     padding: 10px 20px 20px 20px;
     gap: 2dvw;
+    -webkit-box-shadow: 0px 0px 54px -1px rgba(0,0,0,0.7);
+    -moz-box-shadow: 0px 0px 54px -1px rgba(0,0,0,0.7);
+    box-shadow: 0px 0px 54px -1px rgba(0,0,0,0.7);
+    z-index: 2;
   }
 
   h2 {
@@ -148,8 +158,9 @@
   }
 
   .triangle {
-    position: relative;
+    position: absolute;
     height: 20px;
+    z-index: 1;
   }
 
 </style>
