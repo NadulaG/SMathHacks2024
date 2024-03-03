@@ -1,14 +1,35 @@
 <script>
-  // @ts-nocheck
-
   import CircleProgressBar from "./CircleProgressBar.svelte";
   import { createEventDispatcher } from "svelte";
 
+  /**
+   * @type {number}
+   */
   export let healthPercent;
+
+  /**
+   * @type {string}
+   */
   export let waterContent;
+
+  /**
+   * @type {string}
+   */
   export let growsCrops;
+
+  /**
+   * @type {number}
+   */
   export let locationIndex;
+
+  /**
+   * @type {number}
+   */
   export let positionX;
+
+  /**
+   * @type {number}
+  */
   export let positionY;
 
   let offset = 0;
@@ -17,6 +38,9 @@
     offset = 180;
   }
 
+  /**
+   * @type {string}
+   */
   let waterContentColor;
 
   let alphabet = [
@@ -71,7 +95,7 @@
 </script>
 
 <div class="popup" style="top: {positionY*100}%; left: calc({positionX*100}% - {offset}px)">
-  <img src="../../static/summary/triangle.png" class="triangle" style="top: -12px; left: calc(12px + {offset}px);">
+  <img src="/summary/triangle.png" class="triangle" style="top: -12px; left: calc(12px + {offset}px);" alt="triangle">
   <div class="text">
     <h2>
       Grass <span style="font-weight: 400; font-size: 0.8dvw; color: #848484;"
