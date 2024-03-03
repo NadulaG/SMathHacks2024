@@ -39,7 +39,7 @@
         >
       </div>
       <div class="flex items-center space-x-4">
-        <!-- <span class="text-gray-300 font-semibold">3/2/2024</span> -->
+        <div class="text-white font-semibold">Scan:</div>
 
         <select id="image" name="image" class="rounded-md bg-gray-300 p-1 istok" bind:value={image} on:change={() => handleClick()}>
           <option value="3/1/2024">3/1/2024</option>

@@ -89,6 +89,9 @@
 
   const dispatch = createEventDispatcher();
 
+  /**
+   * @param {number} index
+   */
   function handleClick(index) {
     dispatch("buttonClick", index);
   }
