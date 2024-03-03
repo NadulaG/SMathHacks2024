@@ -1,7 +1,7 @@
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+import 'dart:async';
 
 class FlightMapper extends StatefulWidget {
   const FlightMapper({super.key});
@@ -12,15 +12,49 @@ class FlightMapper extends StatefulWidget {
 
 class _FlightMapperState extends State<FlightMapper> {
   FlightData data = FlightData(
-      // image: const Image(image: AssetImage("assets/landscape.png")),
+      image: const Image(image: AssetImage("assets/landscape.png")),
       duration: const Duration(minutes: 24),
       batteryLoss: 58.0);
 
   _handleImageTapUp(BuildContext context, TapDownDetails details) {}
 
+  Future<Position> _getCurrentLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error("Location services are disabled.");
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await (Geolocator.requestPermission());
+      if (permission == LocationPermission.denied) {
+        return Future.error("Location permissions are denied");
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error("Location permissions are permanently denied");
+    }
+
+    var curPos = await Geolocator.getCurrentPosition();
+    print(curPos);
+    return curPos;
+  }
+
+  late GoogleMapController mapController;
+  LatLng _center = const LatLng(45.521563, -122.677433);
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorTheme = Theme.of(context).colorScheme;
+    _getCurrentLocation().then((value) {
+      setState(() {
+        _center = LatLng(value.latitude, value.longitude);
+      });
+    });
     return Scaffold(
         body: Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -101,74 +135,21 @@ class _FlightMapperState extends State<FlightMapper> {
               width: double.infinity,
               height: double.infinity,
               child: () {
-                if (data.image != null) {
-                  return Stack(children: <Widget>[
-                    GestureDetector(
-                      child: Center(child: data.image as Widget),
-                      onTapDown: (details) {
-                        _handleImageTapUp(context, details);
-                      },
+                return Center(
+                  child: GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: _center,
+                      zoom: 11.0,
                     ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FloatingActionButton(
-                          onPressed: () {
-                            setState(() {
-                              data.deleteImage();
-                            });
-                          },
-                          backgroundColor: colorTheme.background,
-                          child: Icon(
-                            Icons.delete,
-                            color: colorTheme.onPrimary,
-                          ),
-                        ),
-                      ),
-                    )
-                  ]);
-                } else {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Looks like you need to upload an image.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white, fontSize: 30),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: SizedBox(
-                          height: 80,
-                          width: 200,
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                                backgroundColor: colorTheme.primary,
-                                foregroundColor: colorTheme.onPrimary,
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8)))),
-                            onPressed: () async {
-                              var result =
-                                  await FilePicker.platform.pickFiles();
-                              if (result != null) {
-                                File file = File(result.files.single.path!);
-                                setState(() {
-                                  data.image = Image.file(file);
-                                });
-                              }
-                            },
-                            child: const Text(
-                              "Upload image",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                }
+                    markers: {
+                      Marker(
+                          markerId: MarkerId("Cheese"),
+                          position: _center,
+                          infoWindow: InfoWindow(
+                              title: "Portland", snippet: "Above a cool state"))
+                    },
+                  ),
+                );
               }()),
         )
       ],
@@ -185,7 +166,7 @@ class PathNode {
 }
 
 class FlightData {
-  Image? image;
+  Image image;
   Duration duration;
   WeatherData? weather;
   double batteryLoss;
@@ -194,12 +175,8 @@ class FlightData {
     this.image = image;
   }
 
-  void deleteImage() {
-    image = null;
-  }
-
   FlightData(
-      {this.image,
+      {required this.image,
       this.weather,
       required this.duration,
       required this.batteryLoss});
