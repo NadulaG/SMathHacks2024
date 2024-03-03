@@ -299,54 +299,26 @@
   </div>
 
   <div class="flex justify-center flex-1" style="position: relative;">
-        <Popup
-        locationIndex=0
-        healthPercent={mapLocations[currentMap][0].health}
-        waterContent={mapLocations[currentMap][0].waterContent}
-        growsCrops={mapLocations[currentMap][0].growsCrops}
-        positionX = {mapLocations[currentMap][0].positionX}
-        positionY = {mapLocations[currentMap][0].positionY}
-        on:buttonClick={handleLocationSelect}
-      />
+    {#each mapLocations[currentMap] as location, index}
       <Popup
-        locationIndex=1
-        healthPercent={mapLocations[currentMap][1].health}
-        waterContent={mapLocations[currentMap][1].waterContent}
-        growsCrops={mapLocations[currentMap][1].growsCrops}
-        positionX = {mapLocations[currentMap][1].positionX}
-        positionY = {mapLocations[currentMap][1].positionY}
+        locationIndex={index}
+        healthPercent={location.health}
+        waterContent={location.waterContent}
+        growsCrops={location.growsCrops}
+        positionX = {location.positionX}
+        positionY = {location.positionY}
         on:buttonClick={handleLocationSelect}
       />
-      <Popup
-        locationIndex=2
-        healthPercent={mapLocations[currentMap][2].health}
-        waterContent={mapLocations[currentMap][2].waterContent}
-        growsCrops={mapLocations[currentMap][2].growsCrops}
-        positionX = {mapLocations[currentMap][2].positionX}
-        positionY = {mapLocations[currentMap][2].positionY}
-        on:buttonClick={handleLocationSelect}
-      />
+
       <BoundingBox
-        quality={mapLocations[currentMap][0].health}
-        width={mapLocations[currentMap][0].width}
-        height={mapLocations[currentMap][0].height}
-        positionX={mapLocations[currentMap][0].positionX}
-        positionY={mapLocations[currentMap][0].positionY}
+        quality={location.health}
+        width={location.width}
+        height={location.height}
+        positionX={location.positionX}
+        positionY={location.positionY}
       />
-      <BoundingBox
-        quality={mapLocations[currentMap][1].health}
-        width={mapLocations[currentMap][1].width}
-        height={mapLocations[currentMap][1].height}
-        positionX={mapLocations[currentMap][1].positionX}
-        positionY={mapLocations[currentMap][1].positionY}
-      />
-      <BoundingBox
-        quality={mapLocations[currentMap][2].health}
-        width={mapLocations[currentMap][2].width}
-        height={mapLocations[currentMap][2].height}
-        positionX={mapLocations[currentMap][2].positionX}
-        positionY={mapLocations[currentMap][2].positionY}
-      />
+    {/each}
+
     <img
       src="/summary/{image.replaceAll('/', '-')}.svg"
       alt="landscape"
