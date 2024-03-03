@@ -2,16 +2,6 @@
     // @ts-nocheck
         export let saturation;
     
-        let w;
-        let sliderOffset;
-        
-        $: {
-            // Calculate sliderOffset whenever concentration, low, high, or w changes
-            if (w !== undefined) {
-                sliderOffset = clamp(percent * w, 0, w);
-            }
-        }
-    
         function clamp(value, min, max) {
             return Math.min(Math.max(value, min), max);
         }
@@ -48,7 +38,7 @@
     </script>
     
     <h4 style="color: {color};">{saturationText}</h4>
-    <div class="bar" bind:clientWidth={w}>
+    <div class="bar">
         <div id="slider" class="slider" style="width: {saturation*100}%; background-color: {color};"></div>
     </div>
     <div class="bar-text">
