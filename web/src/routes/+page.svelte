@@ -305,7 +305,7 @@
       />
     {/each}
     <img
-      src="/summary/{image.replaceAll('/', '-')}.svg"
+      src="/summary/{image.replaceAll('/', '-')}.png"
       alt="landscape"
       class="w-full h-fit"
     />
