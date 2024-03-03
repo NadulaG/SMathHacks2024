@@ -1,11 +1,17 @@
 <script>
+// @ts-nocheck
+
   import CircleProgressBar from "./CircleProgressBar.svelte";
+  import { createEventDispatcher } from 'svelte';
   
   export let healthPercent;
   export let waterContent;
   export let growsCrops;
+  export let locationIndex;
 
   let waterContentColor;
+
+  let alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 
   switch (waterContent) {
     case "Low":
@@ -21,17 +27,28 @@
       waterContentColor = "white";
       break;
   }
+
+  // Create an event dispatcher
+  const dispatch = createEventDispatcher();
+  
+  // Trigger the function from the nested component
+  function handleClick(index) {
+    console.log("Button clicked from nested component with value:", index);
+    // Dispatch an event with the integer argument to call the function in the parent component
+    dispatch('buttonClick', index);
+  }
+
 </script>
 
 <div class="popup">
   <div class="text">
-    <h2>Grass</h2>
+    <h2>Grass <span style="font-weight: 400; font-size: 0.8dvw; color: #848484;">({alphabet[locationIndex]})</span></h2>
     <p><b>Grows Crops:</b> {growsCrops}</p>
     <p>
       <b>Water Content:</b>
       <span style="color: {waterContentColor}">{waterContent}</span>
     </p>
-    <button>View Nutrients</button>
+    <button on:click={() => handleClick(locationIndex)}>View Nutrients</button>
   </div>
   <div class="percentage">
     <CircleProgressBar percent={healthPercent} />
