@@ -34,6 +34,9 @@
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"> <!-- Required for the Video Player -->
 
+    <meta-data android:name="com.google.android.geo.API_KEY"
+                android:value="AIzaSyABsSAE_nVztkJVNKKqye-Zjfu6hMRGI0k"/>
+
        <!-- Start of DJI SDK -->
        <uses-library android:name="com.android.future.usb.accessory" />
        <uses-library android:name="org.apache.http.legacy" android:required="false" />

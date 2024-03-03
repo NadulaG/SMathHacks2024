@@ -16,7 +16,15 @@ class _FlightMapperState extends State<FlightMapper> {
       duration: const Duration(minutes: 24),
       batteryLoss: 58.0);
 
-  _handleImageTapUp(BuildContext context, TapDownDetails details) {}
+  late GoogleMapController _mapController;
+  late Future _centerFuture;
+  LatLng _center = const LatLng(45.521563, -122.677433);
+
+  @override
+  void initState() {
+    _centerFuture = _getCurrentLocation();
+    super.initState();
+  }
 
   Future<Position> _getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -37,24 +45,24 @@ class _FlightMapperState extends State<FlightMapper> {
     }
 
     var curPos = await Geolocator.getCurrentPosition();
-    print(curPos);
+    setState(() {
+      _center = LatLng(curPos.latitude, curPos.longitude);
+    });
     return curPos;
   }
 
-  late GoogleMapController mapController;
-  LatLng _center = const LatLng(45.521563, -122.677433);
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
+  void _onMapCreated(
+      GoogleMapController controller, BuildContext buildContext) async {}
 
   @override
   Widget build(BuildContext context) {
     final colorTheme = Theme.of(context).colorScheme;
-    _getCurrentLocation().then((value) {
-      setState(() {
-        _center = LatLng(value.latitude, value.longitude);
-      });
-    });
+    _centerFuture = _getCurrentLocation();
+    double screenWidth = MediaQuery.of(context).size.width *
+        MediaQuery.of(context).devicePixelRatio;
+    double screenHeight = MediaQuery.of(context).size.height *
+        MediaQuery.of(context).devicePixelRatio;
+    print("Screen dimensions: $screenWidth, $screenHeight");
     return Scaffold(
         body: Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -128,30 +136,95 @@ class _FlightMapperState extends State<FlightMapper> {
             ),
           ),
         ),
-        Flexible(
-          flex: 3,
-          child: Container(
-              color: colorTheme.onBackground,
-              width: double.infinity,
-              height: double.infinity,
-              child: () {
-                return Center(
-                  child: GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target: _center,
-                      zoom: 11.0,
-                    ),
-                    markers: {
-                      Marker(
-                          markerId: MarkerId("Cheese"),
-                          position: _center,
-                          infoWindow: InfoWindow(
-                              title: "Portland", snippet: "Above a cool state"))
-                    },
-                  ),
+        FutureBuilder(
+            future: _centerFuture,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Flexible(
+                  flex: 3,
+                  child: Container(
+                      color: colorTheme.onBackground,
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: () {
+                        return Center(
+                          child: GoogleMap(
+                            onMapCreated:
+                                (GoogleMapController controller) async {
+                              _mapController = controller;
+                              double screenWidth =
+                                  MediaQuery.of(context).size.width *
+                                      MediaQuery.of(context).devicePixelRatio;
+                              double screenHeight =
+                                  MediaQuery.of(context).size.height *
+                                      MediaQuery.of(context).devicePixelRatio;
+
+                              print(
+                                  "Screen dimensions: $screenWidth, $screenHeight");
+
+                              ScreenCoordinate bottomRight = ScreenCoordinate(
+                                  x: screenWidth.round() - 1,
+                                  y: screenHeight.round() - 1);
+
+                              LatLng bottomRightLatLng =
+                                  await controller.getLatLng(bottomRight);
+
+                              LatLng topLeftLatLng = await controller
+                                  .getLatLng(ScreenCoordinate(x: 0, y: 0));
+                              print(
+                                  "Bottom right latitude: ${bottomRightLatLng.latitude}, ${bottomRightLatLng.longitude}");
+                              print(
+                                  "Top left latitude: ${topLeftLatLng.latitude}, ${topLeftLatLng.longitude}");
+                            },
+                            initialCameraPosition: CameraPosition(
+                              target: _center,
+                              zoom: 15.0,
+                            ),
+                            markers: {
+                              Marker(
+                                  markerId: MarkerId("marker1"),
+                                  position: LatLng(
+                                      35.756746599609976, -81.69471345841885),
+                                  draggable: true,
+                                  infoWindow: InfoWindow(
+                                      title: "Coordinates",
+                                      snippet:
+                                          "${_center.latitude}, ${_center.longitude}")),
+                              Marker(
+                                  markerId: MarkerId("marker1"),
+                                  position: LatLng(
+                                      35.74325282002251, -81.65547676384449),
+                                  draggable: true,
+                                  infoWindow: InfoWindow(
+                                      title: "Coordinates",
+                                      snippet:
+                                          "${_center.latitude}, ${_center.longitude}")),
+                            },
+                          ),
+                        );
+                      }()),
                 );
-              }()),
-        )
+              } else {
+                return const Flexible(
+                    flex: 3,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 15.0),
+                            child: Text(
+                              "Loading Google Maps data...",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 25),
+                            ),
+                          ),
+                          CircularProgressIndicator(),
+                        ],
+                      ),
+                    ));
+              }
+            })
       ],
     ));
   }
