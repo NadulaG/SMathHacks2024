@@ -3,6 +3,7 @@
   import Popup from "$lib/components/Popup.svelte";
   import NavBar from "$lib/components/NavBar.svelte";
   import ConcentrationBar from "$lib/components/ConcentrationBar.svelte";
+  import CircleProgressBar from "$lib/components/CircleProgressBar.svelte";
 
   import nutrientData from "../nutrients.json";
 
@@ -106,9 +107,10 @@
         >
           <div class="flex flex-col items-center justify-center h-full">
             <div
-              class="flex justify-center items-center w-full h-full bg-no-repeat bg-center bg-[url('/summary/health.svg')]"
+              class="flex justify-center items-center w-full h-full bg-no-repeat"
             >
-              <div class="text-white font-semibold font-serif text-center">
+            <CircleProgressBar percent=0.72 />
+              <div class="text-white font-semibold font-serif text-center" style="position: absolute;">
                 <p class="text-xl istok">72%</p>
                 <p class="text-xs istok">Healthy</p>
               </div>
@@ -287,12 +289,23 @@
     </div>
   </div>
 
-  <div class="flex justify-center flex-1">
+  <div class="flex justify-center flex-1" style="position: relative;">
     <Popup
       healthPercent="0.83"
       waterContent="High"
       growsCrops="Yes"
-      locationIndex="0"
+      locationIndex=0
+      positionX = 0.22
+      positionY = 0.77
+      on:buttonClick={handleLocationSelect}
+    />
+    <Popup
+      healthPercent="0.43"
+      waterContent="Low"
+      growsCrops="No"
+      locationIndex=1
+      positionX = 0.7
+      positionY = 0.7
       on:buttonClick={handleLocationSelect}
     />
     <img
@@ -307,4 +320,5 @@
   :global(html) {
     background-color: #1b1b1b;
   }
+
 </style>

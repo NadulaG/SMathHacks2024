@@ -8,6 +8,8 @@
   export let waterContent;
   export let growsCrops;
   export let locationIndex;
+  export let positionX;
+  export let positionY;
 
   let waterContentColor;
 
@@ -62,7 +64,8 @@
   }
 </script>
 
-<div class="popup">
+<img src="../../static/summary/triangle.png" class="triangle" style="top: calc({positionY*100}% - 15px); left: calc({positionX*100}% + 50px)">
+<div class="popup" style="top: {positionY*100}%; left: {positionX*100}%">
   <div class="text">
     <h2>
       Grass <span style="font-weight: 400; font-size: 0.8dvw; color: #848484;"
@@ -97,7 +100,7 @@
     background-color: #2a2a2a;
     color: white;
     display: flex;
-    border-radius: 20px;
+    border-radius: 20px 20px 20px 20px;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px 20px 20px;
@@ -143,4 +146,10 @@
     border-radius: 6px;
     font-size: 0.9dvw;
   }
+
+  .triangle {
+    position: relative;
+    height: 20px;
+  }
+
 </style>
