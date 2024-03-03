@@ -1,0 +1,26 @@
+{
+    "potassium": {
+      "low": 0,
+      "high": 120
+    },
+    "nitrogen": {
+      "low": 0,
+      "high": 80
+    },
+    "phosphorus": {
+      "low": 0,
+      "high": 75
+    },
+    "calcium": {
+      "low": 230,
+      "high": 740
+    },
+    "magnesium": {
+      "low": 0,
+      "high": 90
+    },
+    "sulfur": {
+      "low": 0,
+      "high": 30
+    }
+  }
