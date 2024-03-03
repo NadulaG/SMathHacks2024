@@ -1,9 +1,18 @@
 <script>
   import Popup from "$lib/components/Popup.svelte";
   import NavBar from "$lib/components/NavBar.svelte";
+
+  /**
+   * @type {string}
+   */
+  let image = "3/3/2024";
 </script>
 
-<NavBar route="/" />
+<svelte:head>
+  <title>Home</title>
+</svelte:head>
+
+<NavBar route="/" bind:image />
 
 <div class="flex h-max overflow-hidden">
   <div class="bg-[#1B1B1B] w-80">
@@ -76,17 +85,13 @@
   </div>
 
   <div class="flex justify-center flex-1">
-    <Popup healthPercent="0.83" waterContent="High" growsCrops="Yes" />
-    <img src="/summary/image.svg" alt="landscape" class="w-full h-fit" />
+    <!-- <Popup healthPercent="0.83" waterContent="High" growsCrops="Yes" /> -->
+    <img src="/summary/{image.replaceAll('/', '-')}.svg" alt="landscape" class="w-full h-fit" />
   </div>
 </div>
 
 <style lang="postcss">
   :global(html) {
     background-color: #1b1b1b;
-  }
-
-  .istok {
-    font-family: "Istok Web", sans-serif;
   }
 </style>
