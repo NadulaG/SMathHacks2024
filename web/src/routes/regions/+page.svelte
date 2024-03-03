@@ -1,5 +1,4 @@
 <script>
-  import Popup from "$lib/components/Popup.svelte";
   import NavBar from "$lib/components/NavBar.svelte";
 
   /**

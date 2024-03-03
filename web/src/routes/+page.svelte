@@ -2,7 +2,7 @@
   // @ts-nocheck
   import Popup from "$lib/components/Popup.svelte";
   import NavBar from "$lib/components/NavBar.svelte";
-  import ConcentrationBar from "./ConcentrationBar.svelte";
+  import ConcentrationBar from "$lib/components/ConcentrationBar.svelte";
 
   import nutrientData from "../nutrients.json";
 
@@ -78,6 +78,16 @@
   function clamp(value, min, max) {
     return Math.min(Math.max(value, min), max);
   }
+
+  function onExpand(index) {
+    for (let i = 0; i < expandNutrients.length; i++) {
+      if (i != index && expandNutrients[i] == true) {
+        expandNutrients[i] = false;
+      }
+    }
+
+    expandNutrient(index);
+  }
 </script>
 
 <svelte:head>
@@ -137,13 +147,15 @@
             <div class="flex flex-row">
               <img src="/summary/nutrients/potassium.svg" alt="potassium" />
               <button
-                on:click={() => expandNutrient(0)}
+                on:click={() => {
+                  onExpand(0);
+                }}
                 class="ml-2 text-[#D239CC] istok font-semibold"
                 >Potassium <span style="font-weight: 400;"
                   >({nutrientObjects[Math.max(0, currentLocation)]
                     .potassium}ppm)</span
                 ><span style="color: white;"
-                  >{expandNutrients[0] ? "-" : "+"}</span
+                  >{expandNutrients[0] ? " -" : " +"}</span
                 ></button
               >
             </div>
@@ -158,13 +170,15 @@
             <div class="flex flex-row">
               <img src="/summary/nutrients/nitrogen.svg" alt="nitrogen" />
               <button
-                on:click={() => expandNutrient(1)}
+                on:click={() => {
+                  onExpand(1);
+                }}
                 class="ml-2 text-[#E07B04] istok font-semibold"
                 >Nitrogen <span style="font-weight: 400;"
                   >({nutrientObjects[Math.max(0, currentLocation)]
                     .nitrogen}ppm)</span
                 ><span style="color: white;"
-                  >{expandNutrients[1] ? "-" : "+"}</span
+                  >{expandNutrients[1] ? " -" : " +"}</span
                 ></button
               >
             </div>
@@ -179,13 +193,15 @@
             <div class="flex flex-row">
               <img src="/summary/nutrients/phosphorus.svg" alt="phosphorus" />
               <button
-                on:click={() => expandNutrient(2)}
+                on:click={() => {
+                  onExpand(2);
+                }}
                 class="ml-2 text-[#5427B5] istok font-semibold"
                 >Phosphorus <span style="font-weight: 400;"
                   >({nutrientObjects[Math.max(0, currentLocation)]
                     .phosphorus}ppm)</span
                 ><span style="color: white;"
-                  >{expandNutrients[2] ? "-" : "+"}</span
+                  >{expandNutrients[2] ? " -" : " +"}</span
                 ></button
               >
             </div>
@@ -200,13 +216,15 @@
             <div class="flex flex-row">
               <img src="/summary/nutrients/calcium.svg" alt="calcium" />
               <button
-                on:click={() => expandNutrient(3)}
+                on:click={() => {
+                  onExpand(3);
+                }}
                 class="ml-2 text-[#FF1D1D] istok font-semibold"
                 >Calcium <span style="font-weight: 400;"
                   >({nutrientObjects[Math.max(0, currentLocation)]
                     .calcium}ppm)</span
                 ><span style="color: white;"
-                  >{expandNutrients[3] ? "-" : "+"}</span
+                  >{expandNutrients[3] ? " -" : " +"}</span
                 ></button
               >
             </div>
@@ -221,13 +239,15 @@
             <div class="flex flex-row">
               <img src="/summary/nutrients/magnesium.svg" alt="magnesium" />
               <button
-                on:click={() => expandNutrient(4)}
+                on:click={() => {
+                  onExpand(4);
+                }}
                 class="ml-2 text-[#24B682] istok font-semibold"
                 >Magnesium <span style="font-weight: 400;"
                   >({nutrientObjects[Math.max(0, currentLocation)]
                     .magnesium}ppm)</span
                 ><span style="color: white;"
-                  >{expandNutrients[4] ? "-" : "+"}</span
+                  >{expandNutrients[4] ? " -" : " +"}</span
                 ></button
               >
             </div>
@@ -242,13 +262,15 @@
             <div class="flex flex-row">
               <img src="/summary/nutrients/sulfur.svg" alt="sulfur" />
               <button
-                on:click={() => expandNutrient(5)}
+                on:click={() => {
+                  onExpand(5);
+                }}
                 class="ml-2 text-[#F9DD4B] istok font-semibold"
                 >Sulfur <span style="font-weight: 400;"
                   >({nutrientObjects[Math.max(0, currentLocation)]
                     .sulfur}ppm)</span
                 ><span style="color: white;"
-                  >{expandNutrients[5] ? "-" : "+"}</span
+                  >{expandNutrients[5] ? " -" : " +"}</span
                 ></button
               >
             </div>
