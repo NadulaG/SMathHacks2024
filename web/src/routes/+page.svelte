@@ -5,6 +5,7 @@
   import ConcentrationBar from "$lib/components/ConcentrationBar.svelte";
   import CircleProgressBar from "$lib/components/CircleProgressBar.svelte";
   import BoundingBox from "$lib/components/BoundingBox.svelte";
+  import SaturationBar from "$lib/components/SaturationBar.svelte";
 
   import nutrientData from "../nutrients.json";
   import mapLocations from "../locations.json";
@@ -61,7 +62,7 @@
         currentMap = 2;
         break;
     }
-    calculateAverageHealth();
+    currentLocation = -1;
   }
 
   function expandNutrient(index) {
@@ -87,18 +88,6 @@
     expandNutrient(index);
   }
 
-  let averageHealth;
-
-  function calculateAverageHealth(){
-    let sum = 0;
-    mapLocations[currentMap].forEach(element => {
-      sum += element.health;
-    });
-    averageHealth = sum/mapLocations[currentMap].length;
-  }
-
-  calculateAverageHealth();
-
 </script>
 
 <svelte:head>
@@ -119,9 +108,9 @@
             <div
               class="flex justify-center items-center w-full h-full bg-no-repeat"
             >
-            <CircleProgressBar percent={averageHealth} />
+            <CircleProgressBar percent={mapLocations[currentMap].averageHealth} />
               <div class="text-white font-semibold font-serif text-center" style="position: absolute;">
-                <p class="text-xl istok" style="font-weight: 700;">{Math.round(averageHealth*100)}%</p>
+                <p class="text-xl istok" style="font-weight: 700;">{Math.round(mapLocations[currentMap].averageHealth*100)}%</p>
                 <p class="text-xs istok">Healthy</p>
               </div>
             </div>
@@ -131,11 +120,9 @@
         <div class="text-center">
           <h2 class="text-white text-xl istok font-bold">
             Estimated Saturation
+            <br><span style="font-weight: 500;">{Math.round(mapLocations[currentMap].averageSaturation*100)}%</span>
           </h2>
-          <span class="text-[#E15441] text-base istok font-bold"
-            >Far Below Ideal</span
-          >
-          <img src="/summary/saturation.svg" alt="saturation" />
+          <SaturationBar saturation={mapLocations[currentMap].averageSaturation} />
         </div>
 
         <div
@@ -164,7 +151,7 @@
                 }}
                 class="ml-2 text-[#D239CC] istok font-semibold"
                 >Potassium <span style="font-weight: 400;"
-                  >({mapLocations[0][Math.max(0, currentLocation)].nutrients.potassium}ppm)</span
+                  >({mapLocations[currentMap].locations[Math.max(0, currentLocation)].nutrients.potassium}ppm)</span
                 ><span style="color: white;"
                   >{expandNutrients[0] ? " -" : " +"}</span
                 ></button
@@ -173,7 +160,7 @@
             <ConcentrationBar
               low={nutrientData.potassium.low}
               high={nutrientData.potassium.high}
-              concentration={mapLocations[0][Math.max(0, currentLocation)].nutrients
+              concentration={mapLocations[currentMap].locations[Math.max(0, currentLocation)].nutrients
                 .potassium}
               show={expandNutrients[0]}
             />
@@ -186,7 +173,7 @@
                 }}
                 class="ml-2 text-[#E07B04] istok font-semibold"
                 >Nitrogen <span style="font-weight: 400;"
-                  >({mapLocations[0][Math.max(0, currentLocation)].nutrients
+                  >({mapLocations[currentMap].locations[Math.max(0, currentLocation)].nutrients
                     .nitrogen}ppm)</span
                 ><span style="color: white;"
                   >{expandNutrients[1] ? " -" : " +"}</span
@@ -196,7 +183,7 @@
             <ConcentrationBar
               low={nutrientData.nitrogen.low}
               high={nutrientData.nitrogen.high}
-              concentration={mapLocations[0][Math.max(0, currentLocation)].nutrients
+              concentration={mapLocations[currentMap].locations[Math.max(0, currentLocation)].nutrients
                 .nitrogen}
               show={expandNutrients[1]}
             />
@@ -209,7 +196,7 @@
                 }}
                 class="ml-2 text-[#5427B5] istok font-semibold"
                 >Phosphorus <span style="font-weight: 400;"
-                  >({mapLocations[0][Math.max(0, currentLocation)].nutrients
+                  >({mapLocations[currentMap].locations[Math.max(0, currentLocation)].nutrients
                     .phosphorus}ppm)</span
                 ><span style="color: white;"
                   >{expandNutrients[2] ? " -" : " +"}</span
@@ -219,7 +206,7 @@
             <ConcentrationBar
               low={nutrientData.phosphorus.low}
               high={nutrientData.phosphorus.high}
-              concentration={mapLocations[0][Math.max(0, currentLocation)].nutrients
+              concentration={mapLocations[currentMap].locations[Math.max(0, currentLocation)].nutrients
                 .phosphorus}
               show={expandNutrients[2]}
             />
@@ -232,7 +219,7 @@
                 }}
                 class="ml-2 text-[#FF1D1D] istok font-semibold"
                 >Calcium <span style="font-weight: 400;"
-                  >({mapLocations[0][Math.max(0, currentLocation)].nutrients
+                  >({mapLocations[currentMap].locations[Math.max(0, currentLocation)].nutrients
                     .calcium}ppm)</span
                 ><span style="color: white;"
                   >{expandNutrients[3] ? " -" : " +"}</span
@@ -242,7 +229,7 @@
             <ConcentrationBar
               low={nutrientData.calcium.low}
               high={nutrientData.calcium.high}
-              concentration={mapLocations[0][Math.max(0, currentLocation)].nutrients
+              concentration={mapLocations[currentMap].locations[Math.max(0, currentLocation)].nutrients
                 .calcium}
               show={expandNutrients[3]}
             />
@@ -255,7 +242,7 @@
                 }}
                 class="ml-2 text-[#24B682] istok font-semibold"
                 >Magnesium <span style="font-weight: 400;"
-                  >({mapLocations[0][Math.max(0, currentLocation)].nutrients
+                  >({mapLocations[currentMap].locations[Math.max(0, currentLocation)].nutrients
                     .magnesium}ppm)</span
                 ><span style="color: white;"
                   >{expandNutrients[4] ? " -" : " +"}</span
@@ -265,7 +252,7 @@
             <ConcentrationBar
               low={nutrientData.magnesium.low}
               high={nutrientData.magnesium.high}
-              concentration={mapLocations[0][Math.max(0, currentLocation)].nutrients
+              concentration={mapLocations[currentMap].locations[Math.max(0, currentLocation)].nutrients
                 .magnesium}
               show={expandNutrients[4]}
             />
@@ -278,7 +265,7 @@
                 }}
                 class="ml-2 text-[#F9DD4B] istok font-semibold"
                 >Sulfur <span style="font-weight: 400;"
-                  >({mapLocations[0][Math.max(0, currentLocation)].nutrients
+                  >({mapLocations[currentMap].locations[Math.max(0, currentLocation)].nutrients
                     .sulfur}ppm)</span
                 ><span style="color: white;"
                   >{expandNutrients[5] ? " -" : " +"}</span
@@ -288,7 +275,7 @@
             <ConcentrationBar
               low={nutrientData.sulfur.low}
               high={nutrientData.sulfur.high}
-              concentration={mapLocations[0][Math.max(0, currentLocation)].nutrients
+              concentration={mapLocations[currentMap].locations[Math.max(0, currentLocation)].nutrients
                 .sulfur}
               show={expandNutrients[5]}
             />
@@ -299,54 +286,24 @@
   </div>
 
   <div class="flex justify-center flex-1" style="position: relative;">
-        <Popup
-        locationIndex=0
-        healthPercent={mapLocations[currentMap][0].health}
-        waterContent={mapLocations[currentMap][0].waterContent}
-        growsCrops={mapLocations[currentMap][0].growsCrops}
-        positionX = {mapLocations[currentMap][0].positionX}
-        positionY = {mapLocations[currentMap][0].positionY}
-        on:buttonClick={handleLocationSelect}
-      />
+    {#each mapLocations[currentMap].locations as location, index}
       <Popup
-        locationIndex=1
-        healthPercent={mapLocations[currentMap][1].health}
-        waterContent={mapLocations[currentMap][1].waterContent}
-        growsCrops={mapLocations[currentMap][1].growsCrops}
-        positionX = {mapLocations[currentMap][1].positionX}
-        positionY = {mapLocations[currentMap][1].positionY}
-        on:buttonClick={handleLocationSelect}
-      />
-      <Popup
-        locationIndex=2
-        healthPercent={mapLocations[currentMap][2].health}
-        waterContent={mapLocations[currentMap][2].waterContent}
-        growsCrops={mapLocations[currentMap][2].growsCrops}
-        positionX = {mapLocations[currentMap][2].positionX}
-        positionY = {mapLocations[currentMap][2].positionY}
+        locationIndex={index}
+        healthPercent={location.health}
+        waterContent={location.waterContent}
+        growsCrops={location.growsCrops}
+        positionX={location.positionX}
+        positionY={location.positionY}
         on:buttonClick={handleLocationSelect}
       />
       <BoundingBox
-        quality={mapLocations[currentMap][0].health}
-        width={mapLocations[currentMap][0].width}
-        height={mapLocations[currentMap][0].height}
-        positionX={mapLocations[currentMap][0].positionX}
-        positionY={mapLocations[currentMap][0].positionY}
+        quality={location.health}
+        width={location.width}
+        height={location.height}
+        positionX={location.positionX}
+        positionY={location.positionY}
       />
-      <BoundingBox
-        quality={mapLocations[currentMap][1].health}
-        width={mapLocations[currentMap][1].width}
-        height={mapLocations[currentMap][1].height}
-        positionX={mapLocations[currentMap][1].positionX}
-        positionY={mapLocations[currentMap][1].positionY}
-      />
-      <BoundingBox
-        quality={mapLocations[currentMap][2].health}
-        width={mapLocations[currentMap][2].width}
-        height={mapLocations[currentMap][2].height}
-        positionX={mapLocations[currentMap][2].positionX}
-        positionY={mapLocations[currentMap][2].positionY}
-      />
+    {/each}
     <img
       src="/summary/{image.replaceAll('/', '-')}.svg"
       alt="landscape"

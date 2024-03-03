@@ -28,6 +28,7 @@
   border-radius: 50%;
   width: 6dvw;
   height: 6dvw;
+  transition: background 0.5s;
 }
 </style>
 
