@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  dji:
+    dependency: "direct main"
+    description:
+      name: dji
+      sha256: fa8973aeea67f79fa83189fdbd00f56d9f108a40999a90d15ec00082523e429b
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.12"
   fake_async:
     dependency: transitive
     description:
