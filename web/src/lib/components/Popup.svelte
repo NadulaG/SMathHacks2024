@@ -76,11 +76,11 @@
     case "Low":
       waterContentColor = "#F94B4B";
       break;
-    case "Med":
-      waterContentColor = "#F4B71A";
+    case "Ideal":
+      waterContentColor = "#24DD14";
       break;
     case "High":
-      waterContentColor = "#24DD14";
+      waterContentColor = "#F4B71A";
       break;
     default:
       waterContentColor = "white";
