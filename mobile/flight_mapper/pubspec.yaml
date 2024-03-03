@@ -35,7 +35,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   file_picker: ^6.1.1
-  dji: ^1.0.12
   google_maps_flutter: ^2.5.3
   async: ^2.11.0
   geolocator: ^11.0.0
