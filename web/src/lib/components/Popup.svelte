@@ -1,9 +1,9 @@
 <script>
-// @ts-nocheck
+  // @ts-nocheck
 
   import CircleProgressBar from "./CircleProgressBar.svelte";
-  import { createEventDispatcher } from 'svelte';
-  
+  import { createEventDispatcher } from "svelte";
+
   export let healthPercent;
   export let waterContent;
   export let growsCrops;
@@ -11,7 +11,34 @@
 
   let waterContentColor;
 
-  let alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+  let alphabet = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+  ];
 
   switch (waterContent) {
     case "Low":
@@ -28,21 +55,20 @@
       break;
   }
 
-  // Create an event dispatcher
   const dispatch = createEventDispatcher();
-  
-  // Trigger the function from the nested component
-  function handleClick(index) {
-    console.log("Button clicked from nested component with value:", index);
-    // Dispatch an event with the integer argument to call the function in the parent component
-    dispatch('buttonClick', index);
-  }
 
+  function handleClick(index) {
+    dispatch("buttonClick", index);
+  }
 </script>
 
 <div class="popup">
   <div class="text">
-    <h2>Grass <span style="font-weight: 400; font-size: 0.8dvw; color: #848484;">({alphabet[locationIndex]})</span></h2>
+    <h2>
+      Grass <span style="font-weight: 400; font-size: 0.8dvw; color: #848484;"
+        >({alphabet[locationIndex]})</span
+      >
+    </h2>
     <p><b>Grows Crops:</b> {growsCrops}</p>
     <p>
       <b>Water Content:</b>
