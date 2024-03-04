@@ -142,7 +142,7 @@
             >
           </h2>
 
-          <div class="flex flex-col space-y-2 mt-2">
+          <div class="flex flex-col space-y-2 mt-2" style="position: absolute;">
             <div class="flex flex-row">
               <img src="/summary/nutrients/potassium.svg" alt="potassium" />
               <button
